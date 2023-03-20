@@ -8,32 +8,22 @@ import { Dispatch } from 'redux';
 import { useSelector, useDispatch } from 'react-redux';
 
 
-const mapStateToProps = state => {
+const mapDispatchToProps = state => {
   console.log(state)
   return {
     ...state,
     chessTimeValue: state
   }
 }
-connect(mapStateToProps, null)(SetTimeForm)
+connect(null, mapDispatchToProps)(SetTimeForm)
 
 function App() {
-  const [value, setValue] = useState('');
   const dispatch = useDispatch();
-   const whiteToMove = () => {
-      
-   };
-
-   const blackToMove = () => {
-    
-   };
    
    const handleSubmit = e => {
-    console.log(e)
-    dispatch({type: `TIME/SELECT_CHESS-TIME:${e}`});
-    console.log(e);
-    mapStateToProps(e);
-   }
+    dispatch({type: `TIME/SET_CHESS-TIME:${e}`});
+    mapDispatchToProps(e);;
+   };
 
   return (
     <div className="App">
@@ -43,9 +33,7 @@ function App() {
      <SetTimeForm  onSubmit={e => handleSubmit(e)}/>
      </div>
      <div className='timer-block'>
-      <Timer  />
-     <button onClick={whiteToMove}>white!</button>
-     <button onClick={blackToMove}>black!</button>
+      <Timer />
      </div>
       </main>
     </div>

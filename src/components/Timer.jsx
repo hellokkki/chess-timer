@@ -2,50 +2,58 @@ import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
+const mapStateToProps = state => {
+ return {
+   ...state,
+   chessTimeValue: state
+ }
+};
 
-const selectedTime = state => {
-  console.log(state);
-  return state ? state.value : "00:))"
-}
+const Timer = (chessTimeValue) => {
+  const dispatch = useDispatch();
+  const time = useSelector(chessTimeValue => {
+    if (chessTimeValue !== undefined) {
+      console.log(chessTimeValue)
+      return chessTimeValue
+    } 
+  });
 
-const Timer = () => {
- const time = useSelector(selectedTime);
-console.log(time)
-  const [minutes, setMinutes] = useState('');
-  const [seconds, setSeconds] = useState(''); 
-
-  const handleStart = () => {
-
-  };
-  const handleStop = () => {
-
-  };
-  const handleReset = () => {
-    handleStop();
-  };
+ const [whiteTime, setWhiteTime] = useState();
+ const [blackTime, setBlackTime] = useState();
   
+
+
+  let startTimer = null;
+
+
+  const whiteToMove = () => {
+    console.log('work')
+    dispatch({type: 'MOVE/WHITE_TO_MOVE'})
+  };
+
+  const blackToMove = () => {
+    console.log('work')
+  };
+
  return (
    <div className='timer'>
-
-    <button onClick={handleStart} type="button">
-      Start
-    </button>
-    <button onClick={handleStop} type="button">
-      Stop
-    </button>
-    <button onClick={handleReset} type="button">
-      Reset
-    </button>
     <div style={{padding: 20}}>
-      {twoDigits(minutes ? minutes : "00")}:
-      {twoDigits(seconds ? seconds : "00")}
+      {time.selecter.whiteTime}
+      <button onClick={whiteToMove}>white to move!</button>
+    </div>
+   
+ 
+    <div style={{padding: 20}}>
+      {time.selecter.blackTime}
+      <button onClick={blackToMove}>black to move!</button>
     </div>
    </div>
  )
 }
 
-export default connect(null, null) (Timer);
+export default connect(mapStateToProps, null) (Timer);
 
 const twoDigits = (num) => String(num).padStart(2, '0');
 
