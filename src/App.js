@@ -1,23 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+
+import { useState } from 'react';
+import './App.scss';
+import Timer from './components/Timer';
+import SetTimeForm from './components/SetTimeForm';
+import { connect, Connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
+
+
+const mapStateToProps = state => {
+  console.log(state)
+  return {
+    ...state,
+    chessTimeValue: state
+  }
+}
+connect(mapStateToProps, null)(SetTimeForm)
 
 function App() {
+  const [value, setValue] = useState('');
+  const dispatch = useDispatch();
+   const whiteToMove = () => {
+      
+   };
+
+   const blackToMove = () => {
+    
+   };
+   
+   const handleSubmit = e => {
+    console.log(e)
+    dispatch({type: `TIME/SELECT_CHESS-TIME:${e}`});
+    console.log(e);
+    mapStateToProps(e);
+   }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  
+      <main>
+     <div className='select-block'>
+     <SetTimeForm  onSubmit={e => handleSubmit(e)}/>
+     </div>
+     <div className='timer-block'>
+      <Timer  />
+     <button onClick={whiteToMove}>white!</button>
+     <button onClick={blackToMove}>black!</button>
+     </div>
+      </main>
     </div>
   );
 }

@@ -1,0 +1,17 @@
+.App {
+  min-width: 100vw;
+  min-height: 100vw;
+}
+
+header {
+  height: 100px;
+}
+
+main {
+  min-width: 100vw;
+  text-align: center;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
