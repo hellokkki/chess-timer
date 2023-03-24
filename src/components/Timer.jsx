@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 
 const mapStateToProps = state => {
-  console.log(state)
  return {
    state
  }
@@ -26,8 +25,12 @@ const Clock = ({ time, onStop, isRunning }) => {
     if (secs < 10) S = (`0${secs}`);
     return (`${H || hours} : ${M || minutes} : ${S || secs}`);
   };
-  const [seconds, setSeconds] = useState(parseTimeToSeconds(time));
-  
+  const [seconds, setSeconds] = useState();
+
+  useEffect(() => {
+    setSeconds(state => state = parseTimeToSeconds(time))
+  }, [time])
+
   useEffect(() => {
       if (isRunning === false) return;
       const timer = 
@@ -44,35 +47,38 @@ const Clock = ({ time, onStop, isRunning }) => {
   }, [seconds, onStop]);
 
   return (
-    <div>{formatSecondsToTime(seconds)}</div>
+    <div>{formatSecondsToTime(seconds ? seconds : "")}</div>
   )
-
 };
 
 
 const Timer = ({state}) => {
-  const dispatch = useDispatch();
-  const whiteTime = useSelector(state => state.selecter.whiteTime );
-  const blackTime = useSelector(state => state.selecter.blackTime);
-   const [isRunning, setIsRunning] = useState(false);
-  console.log(whiteTime ? whiteTime : 'non');
 
-
-
-
-   const onStop = () => {
-    setIsRunning(false);
-    
+  const onStop = () => {
+    setIsRunningBlack(false);
+    setIsRunningWhite(false);
    }
 
   const whiteToMove = () => {
-    console.log('work')
-    dispatch({type: 'MOVE/WHITE_TO_MOVE'})
+    console.log('work');
+    dispatch({type: 'MOVE/WHITE_TO_MOVE'});
+    setIsRunningWhite(true);
+    setIsRunningBlack(false);
   };
 
   const blackToMove = () => {
-    console.log('work')
+    console.log('work');
+    dispatch({type: 'MOVE/BLACK_TO_MOVE'});
+    setIsRunningWhite(false);
+    setIsRunningBlack(true);
   };
+  const dispatch = useDispatch();
+  const whiteTime = useSelector(state => state.selecter.whiteTime );
+  const blackTime = useSelector(state => state.selecter.blackTime);
+  const [isRunningWhite, setIsRunningWhite] = useState(false);
+  const [isRunningBlack, setIsRunningBlack] = useState(false);
+  console.log(whiteTime ? whiteTime : 'non');
+
 
  return (
    <div className='timer'>
@@ -80,19 +86,19 @@ const Timer = ({state}) => {
       <Clock
       time={whiteTime ? whiteTime : "00:00"}
       onStop={onStop}
-      isRunning={isRunning}
+      isRunning={isRunningWhite}
       />
-      <button onClick={whiteToMove}>white to move!</button>
+      <button onClick={blackToMove}>black to move!</button>
     </div>
    
- 
     <div style={{padding: 20}}>
       <Clock 
       time={blackTime ? blackTime : "00:00"}
       onStop={onStop}
-      isRunning={isRunning}
+      isRunning={isRunningBlack}
       />
-      <button onClick={blackToMove}>black to move!</button>
+      <button onClick={whiteToMove}>white to move!</button>
+      
     </div>
    </div>
  )

@@ -3,9 +3,8 @@ import { useState } from 'react';
 import './App.scss';
 import Timer from './components/Timer';
 import SetTimeForm from './components/SetTimeForm';
-import { connect, Connect } from 'react-redux';
-import { Dispatch } from 'redux';
-import { useSelector, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 
 const mapDispatchToProps = state => {
