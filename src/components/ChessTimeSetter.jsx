@@ -3,6 +3,7 @@ import React from 'react';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import { useDispatch } from 'react-redux';
+import './components.scss'
 
 
 function ChessTimeSetter() {
@@ -24,6 +25,7 @@ function ChessTimeSetter() {
   return (
     <div>
       <Select 
+      className='time-setter'
       options={options}
       onChange={e => handleChange(e)}
       />

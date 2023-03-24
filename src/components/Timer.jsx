@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 
+import './components.scss'
+
 const Clock = ({ time, onStop, isRunning }) => {
 
   const parseTimeToSeconds = str => str ? str.split(':').reduce((acc, time) =>(60 * acc) + +time) : "";
@@ -39,7 +41,9 @@ const Clock = ({ time, onStop, isRunning }) => {
   }, [seconds, onStop]);
 
   return (
-    <div>{formatSecondsToTime(seconds ? seconds : "")}</div>
+    <div className='time-line'>
+      {formatSecondsToTime(seconds)}
+    </div>
   )
 };
 
@@ -71,7 +75,12 @@ const Timer = () => {
       onStop={onStop}
       isRunning={isWhiteRunning}
       />
-      <button onClick={blackToMove}>black to move!</button>
+      <button
+       onClick={blackToMove}
+       className='btn chess-btn'
+      >
+        black to move!
+      </button>
     </div>
    
     <div style={{padding: 20}}>
@@ -80,7 +89,12 @@ const Timer = () => {
       onStop={onStop}
       isRunning={isblackRunning}
       />
-      <button onClick={whiteToMove}>white to move!</button>
+      <button 
+      onClick={whiteToMove}
+      className='btn chess-btn'
+      >
+        white to move!
+      </button>
     </div>
    </div>
  )
