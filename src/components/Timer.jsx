@@ -5,28 +5,65 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 
 const mapStateToProps = state => {
+  console.log(state)
  return {
-   ...state,
-   chessTimeValue: state
+   state
  }
 };
 
-const Timer = (chessTimeValue) => {
-  const dispatch = useDispatch();
-  const time = useSelector(chessTimeValue => {
-    if (chessTimeValue !== undefined) {
-      console.log(chessTimeValue)
-      return chessTimeValue
-    } 
-  });
 
- const [whiteTime, setWhiteTime] = useState();
- const [blackTime, setBlackTime] = useState();
+
+const Clock = ({ time, onStop, isRunning }) => {
+
+  const parseTimeToSeconds = str => str ? str.split(':').reduce((acc, time) =>(60 * acc) + +time) : "";
+  const formatSecondsToTime = seconds => {
+     let hours = Math.floor(seconds / 3600);
+     let minutes = Math.floor((seconds - (hours * 3600)) / 60);  
+     let secs = seconds - (hours * 3600) - (minutes * 60);
+     let H, M, S;
+     if (hours < 10) H = (`0${hours}`);
+    if (minutes < 10) M = (`0${minutes}`);
+    if (secs < 10) S = (`0${secs}`);
+    return (`${H || hours} : ${M || minutes} : ${S || secs}`);
+  };
+  const [seconds, setSeconds] = useState(parseTimeToSeconds(time));
   
+  useEffect(() => {
+      if (isRunning === false) return;
+      const timer = 
+      setInterval(() => {
+        if (seconds === 0) {
+          onStop();
+          clearInterval(timer);
+        } else {
+          setSeconds(seconds => seconds - 1);
+        }
+      }, 1000);
+   
+       return () => clearInterval(timer);
+  }, [seconds, onStop]);
+
+  return (
+    <div>{formatSecondsToTime(seconds)}</div>
+  )
+
+};
 
 
-  let startTimer = null;
+const Timer = ({state}) => {
+  const dispatch = useDispatch();
+  const whiteTime = useSelector(state => state.selecter.whiteTime );
+  const blackTime = useSelector(state => state.selecter.blackTime);
+   const [isRunning, setIsRunning] = useState(false);
+  console.log(whiteTime ? whiteTime : 'non');
 
+
+
+
+   const onStop = () => {
+    setIsRunning(false);
+    
+   }
 
   const whiteToMove = () => {
     console.log('work')
@@ -40,13 +77,21 @@ const Timer = (chessTimeValue) => {
  return (
    <div className='timer'>
     <div style={{padding: 20}}>
-      {time.selecter.whiteTime}
+      <Clock
+      time={whiteTime ? whiteTime : "00:00"}
+      onStop={onStop}
+      isRunning={isRunning}
+      />
       <button onClick={whiteToMove}>white to move!</button>
     </div>
    
  
     <div style={{padding: 20}}>
-      {time.selecter.blackTime}
+      <Clock 
+      time={blackTime ? blackTime : "00:00"}
+      onStop={onStop}
+      isRunning={isRunning}
+      />
       <button onClick={blackToMove}>black to move!</button>
     </div>
    </div>
