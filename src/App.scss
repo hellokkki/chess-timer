@@ -1,13 +1,15 @@
 .App {
   min-width: 100vw;
-  min-height: 100vw;
+  max-height: 100vh;
 }
 
 header {
   height: 100px;
 }
 
-main {
+.main-content {
+  padding-top: 25rem;
+
   min-width: 100vw;
   text-align: center;
   display: flex;

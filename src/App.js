@@ -7,8 +7,7 @@ function App() {
 
   return (
     <div className="App">
-  
-      <main>
+      <main className='main-content'>
      <div className='select-block'>
      <ChessTimeSetter />
      </div>
