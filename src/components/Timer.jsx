@@ -1,16 +1,8 @@
 import React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-
-const mapStateToProps = state => {
- return {
-   state
- }
-};
-
-
 
 const Clock = ({ time, onStop, isRunning }) => {
 
@@ -19,11 +11,11 @@ const Clock = ({ time, onStop, isRunning }) => {
      let hours = Math.floor(seconds / 3600);
      let minutes = Math.floor((seconds - (hours * 3600)) / 60);  
      let secs = seconds - (hours * 3600) - (minutes * 60);
-     let H, M, S;
-     if (hours < 10) H = (`0${hours}`);
+     let  M, S;
     if (minutes < 10) M = (`0${minutes}`);
     if (secs < 10) S = (`0${secs}`);
-    return (`${H || hours} : ${M || minutes} : ${S || secs}`);
+    if (hours === 0) return(`${M || minutes} : ${S || secs}`);
+    return (`${hours} : ${M || minutes} : ${S || secs}`);
   };
   const [seconds, setSeconds] = useState();
 
@@ -52,41 +44,32 @@ const Clock = ({ time, onStop, isRunning }) => {
 };
 
 
-const Timer = ({state}) => {
-
+const Timer = () => {
+  const dispatch = useDispatch();
   const onStop = () => {
-    setIsRunningBlack(false);
-    setIsRunningWhite(false);
-   }
+    dispatch({type: 'MOVE/STOP_MOVING'});
+   };
 
   const whiteToMove = () => {
-    console.log('work');
     dispatch({type: 'MOVE/WHITE_TO_MOVE'});
-    setIsRunningWhite(true);
-    setIsRunningBlack(false);
   };
 
   const blackToMove = () => {
-    console.log('work');
     dispatch({type: 'MOVE/BLACK_TO_MOVE'});
-    setIsRunningWhite(false);
-    setIsRunningBlack(true);
   };
-  const dispatch = useDispatch();
+
   const whiteTime = useSelector(state => state.selecter.whiteTime );
   const blackTime = useSelector(state => state.selecter.blackTime);
-  const [isRunningWhite, setIsRunningWhite] = useState(false);
-  const [isRunningBlack, setIsRunningBlack] = useState(false);
-  console.log(whiteTime ? whiteTime : 'non');
-
-
+  const isWhiteRunning = useSelector(state => state.timer.isWhiteRunning);
+  const isblackRunning = useSelector(state => state.timer.isBlackRunning);
+  
  return (
    <div className='timer'>
     <div style={{padding: 20}}>
       <Clock
-      time={whiteTime ? whiteTime : "00:00"}
+      time={whiteTime}
       onStop={onStop}
-      isRunning={isRunningWhite}
+      isRunning={isWhiteRunning}
       />
       <button onClick={blackToMove}>black to move!</button>
     </div>
@@ -95,42 +78,12 @@ const Timer = ({state}) => {
       <Clock 
       time={blackTime ? blackTime : "00:00"}
       onStop={onStop}
-      isRunning={isRunningBlack}
+      isRunning={isblackRunning}
       />
       <button onClick={whiteToMove}>white to move!</button>
-      
     </div>
    </div>
  )
 }
 
-export default connect(mapStateToProps, null) (Timer);
-
-const twoDigits = (num) => String(num).padStart(2, '0');
-
-
-
-
-
-
-  // useEffect(() => {
-  //   let interval = setInterval(() => {
-  //     if (seconds > 0) {
-  //      setSeconds(seconds - 1);
-  //     }
-  //    if (seconds === 0) {
-  //       if (minutes === 0) {
-  //           clearInterval(interval);
-  //       } else {
-  //           setMinutes( minutes - 1 );
-  //           setSeconds(59);
-  //       }
-  //    }
-  //    }, 1000);
-  //    return () => {
-  //       clearInterval(interval);
-  //    }
-  // })
-
-
-
+export default connect(null, null) (Timer);
